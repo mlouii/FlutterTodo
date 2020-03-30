@@ -50,7 +50,7 @@ class Tasks with ChangeNotifier {
               'title': title,
               'description': description,
               'duration': duration.toString(),
-              'dateTime': timeStamp,
+              'dateTime': timeStamp.toIso8601String(),
             }))
         .then((response) {
       _tasks.add(TaskItem(

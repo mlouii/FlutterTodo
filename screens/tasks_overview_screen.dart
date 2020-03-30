@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/providers/Tasks.dart';
+import 'package:todo_app/screens/new_item_screen.dart';
 import 'package:todo_app/widgets/bottom_nav_bar.dart';
 import 'package:todo_app/widgets/task_item.dart';
 
@@ -20,7 +21,9 @@ class TasksOverviewScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.add),
             color: Theme.of(context).cardColor,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pushNamed(NewItemScreen.routeName);
+            },
           )
         ],
       ),
