@@ -28,7 +28,7 @@ class TaskItemWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Dismissible(
-        key: ValueKey(id),
+        key: UniqueKey(),
         //direction: DismissDirection.endToStart,
         background: slideRightBackground(context),
         secondaryBackground: slideLeftBackground(context),
@@ -58,11 +58,21 @@ class TaskItemWidget extends StatelessWidget {
                   );
                 });
             return res;
+          } else {
+            return Future<bool>.value(true);
           }
         },
         onDismissed: (direction) {
           if (direction == DismissDirection.endToStart) {
             Provider.of<Tasks>(context, listen: false).removeTask(id);
+          } else {
+            Provider.of<Tasks>(context, listen: false).toggleSelect(id);
+            Scaffold.of(context).hideCurrentSnackBar();
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text(
+                'Selected task : $title',
+              ),
+            ));
           }
         },
         child: Container(

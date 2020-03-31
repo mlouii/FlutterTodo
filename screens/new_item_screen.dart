@@ -39,7 +39,7 @@ class _NewItemScreenState extends State<NewItemScreen> {
     _form.currentState.save();
     if (isValid) {
       Provider.of<Tasks>(context, listen: false)
-          .addTask(_title, _description, _duration)
+          .addTask(_title, false, _description, _duration)
           .catchError((error) {
         showDialog(
           context: context,
