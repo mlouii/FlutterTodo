@@ -18,6 +18,7 @@ class _NewItemScreenState extends State<NewItemScreen> {
   Duration _duration = Duration(minutes: 1);
   String _title = '';
   String _description = '';
+  bool _isSelected = false;
   bool _isLoading = false;
 
   @override
@@ -39,7 +40,12 @@ class _NewItemScreenState extends State<NewItemScreen> {
     _form.currentState.save();
     if (isValid) {
       Provider.of<Tasks>(context, listen: false)
-          .addTask(_title, false, _description, _duration)
+          .addTask(
+        _title,
+        _isSelected,
+        _description,
+        _duration,
+      )
           .catchError((error) {
         showDialog(
           context: context,
@@ -64,7 +70,6 @@ class _NewItemScreenState extends State<NewItemScreen> {
         });
         Navigator.of(context).pop();
       });
-      ;
     }
   }
 
@@ -199,6 +204,25 @@ class _NewItemScreenState extends State<NewItemScreen> {
                             ),
                           ],
                         ),
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Switch(
+                            value: _isSelected,
+                            onChanged: (value) {
+                              setState(() {
+                                _isSelected = value;
+                              });
+                            },
+                          ),
+                          _isSelected
+                              ? Text('Currently Selected',
+                                  style: Theme.of(context).textTheme.subhead)
+                              : Text(
+                                  'Not Selected',
+                                  style: Theme.of(context).textTheme.subhead,
+                                )
+                        ],
                       ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,

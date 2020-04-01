@@ -23,24 +23,7 @@ class TaskItem {
 }
 
 class Tasks with ChangeNotifier {
-  List<TaskItem> _tasks = [
-    TaskItem(
-      id: '1',
-      title: 'Get out of Bed!',
-      description: 'Wake the fuck up',
-      dateTime: DateTime.now(),
-      duration: Duration(hours: 20),
-      isSelected: false,
-    ),
-    TaskItem(
-      id: '1',
-      title: 'Brush your teeth',
-      description: 'Dental health is important',
-      dateTime: DateTime.now(),
-      duration: Duration(hours: 2, minutes: 30),
-      isSelected: false,
-    ),
-  ];
+  List<TaskItem> _tasks = [];
 
   List<TaskItem> get tasks {
     return [..._tasks];
@@ -71,6 +54,47 @@ class Tasks with ChangeNotifier {
     });
   }
 
+  Duration _parseDuration(String s) {
+    int hours = 0;
+    int minutes = 0;
+    int micros;
+    List<String> parts = s.split(':');
+    if (parts.length > 2) {
+      hours = int.parse(parts[parts.length - 3]);
+    }
+    if (parts.length > 1) {
+      minutes = int.parse(parts[parts.length - 2]);
+    }
+    micros = (double.parse(parts[parts.length - 1]) * 1000000).round();
+    return Duration(hours: hours, minutes: minutes, microseconds: micros);
+  }
+
+  Future<void> fetchAndSetTasks() async {
+    const url = 'https://fluttertest-17c07.firebaseio.com/tasks.json';
+    try {
+      final response = await http.get(url);
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      if (extractedData == null) {
+        return null;
+      }
+      final List<TaskItem> loadedTasks = [];
+      extractedData.forEach((taskId, taskData) {
+        loadedTasks.add(TaskItem(
+          id: taskId,
+          title: taskData['title'],
+          description: taskData['description'],
+          duration: _parseDuration(taskData['duration']),
+          dateTime: DateTime.parse(taskData['dateTime']),
+          isSelected: taskData['isSelected'],
+        ));
+      });
+      _tasks = loadedTasks;
+      notifyListeners();
+    } catch (error) {
+      throw (error);
+    }
+  }
+
   Future<void> addTask(String title, bool isSelected,
       [String description, Duration duration]) {
     const url = 'https://fluttertest-17c07.firebaseio.com/tasks.json';
@@ -91,6 +115,7 @@ class Tasks with ChangeNotifier {
         dateTime: timeStamp,
         description: description,
         duration: duration,
+        isSelected: isSelected,
       ));
       notifyListeners();
     });

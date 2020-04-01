@@ -7,8 +7,10 @@ class TaskItemWidget extends StatelessWidget {
   final String description;
   final Duration duration;
   final String id;
+  final bool isSelected;
 
-  TaskItemWidget({this.title, this.duration, this.description, this.id});
+  TaskItemWidget(
+      {this.title, this.duration, this.description, this.id, this.isSelected});
 
   String formatDuration(Duration duration) {
     String toReturn = '';
@@ -26,7 +28,10 @@ class TaskItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: EdgeInsets.symmetric(
+        horizontal: isSelected ? 8 : 10,
+        vertical: isSelected ? 3 : 5,
+      ),
       child: Dismissible(
         key: UniqueKey(),
         //direction: DismissDirection.endToStart,
@@ -70,7 +75,9 @@ class TaskItemWidget extends StatelessWidget {
             Scaffold.of(context).hideCurrentSnackBar();
             Scaffold.of(context).showSnackBar(SnackBar(
               content: Text(
-                'Selected task : $title',
+                isSelected
+                    ? 'Deselected task : $title'
+                    : 'Selected task : $title',
               ),
             ));
           }
@@ -78,6 +85,9 @@ class TaskItemWidget extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 5),
           decoration: BoxDecoration(
+            border: Border.all(
+                width: isSelected ? 3 : 0,
+                color: Theme.of(context).primaryColor),
             color: Theme.of(context).cardColor,
             boxShadow: [
               BoxShadow(
@@ -157,11 +167,11 @@ class TaskItemWidget extends StatelessWidget {
               width: 20,
             ),
             Icon(
-              Icons.star,
+              isSelected ? Icons.star_border : Icons.star,
               color: Theme.of(context).cardColor,
             ),
             Text(
-              " Select",
+              isSelected ? "Deselect " : " Select",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,

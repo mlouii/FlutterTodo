@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/providers/Tasks.dart';
 import 'package:todo_app/screens/new_item_screen.dart';
+import 'package:todo_app/screens/selected_tasks_screen.dart';
+import 'package:todo_app/screens/tabs_screen.dart';
 import 'package:todo_app/screens/tasks_overview_screen.dart';
 
 void main() => runApp(MyApp());
@@ -60,9 +62,10 @@ class MyApp extends StatelessWidget {
                 color: Color.fromRGBO(71, 67, 80, 1.0)),
           ),
         ),
-        home: TasksOverviewScreen(),
         routes: {
+          '/': (ctx) => TabsScreen(),
           TasksOverviewScreen.routeName: (ctx) => TasksOverviewScreen(),
+          SelectedTasksScreen.routeName: (ctx) => SelectedTasksScreen(),
           NewItemScreen.routeName: (ctx) => NewItemScreen(),
         },
       ),
